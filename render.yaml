@@ -1,0 +1,17 @@
+# One-click public deploy of the search API to Render's free tier.
+# The data lives in any Postgres with pgvector (e.g. Neon's free tier): load it
+# with deploy/publish_snapshot.sh, then set DATABASE_URL when Render asks.
+# The crawler itself must run in India (GeM refuses foreign connections), so it
+# stays on your own server; this service only reads the database.
+services:
+  - type: web
+    name: tender-search
+    runtime: docker
+    dockerfilePath: ./Dockerfile.search
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false # entered in the Render dashboard, never committed
+      - key: API_PORT
+        value: "10000" # Render routes traffic to port 10000

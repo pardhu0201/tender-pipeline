@@ -395,6 +395,22 @@ GitHub's hosted runners every request fails with `connection refused`, while
 the same requests work from an Indian network (verified October 2026). Use a
 machine or VPS in India.
 
+### A public demo of the search
+
+The search API only reads the database, so unlike the crawler it can run
+anywhere. To put it online for free:
+
+1. Create a free Postgres with pgvector, e.g. a [Neon](https://neon.tech)
+   project, and copy its connection string.
+2. Copy a snapshot of your data into it (about a minute for 46k tenders):
+   `bash deploy/publish_snapshot.sh 'postgresql://...neon.tech/neondb?sslmode=require'`
+3. On [Render](https://render.com), create a Blueprint from this repository.
+   [render.yaml](render.yaml) defines a free web service from
+   `Dockerfile.search`; paste the same connection string as `DATABASE_URL`.
+
+The free tier sleeps after 15 idle minutes and wakes on the next request; the
+API's ~250 MB footprint fits its 512 MB limit.
+
 GeM's API is undocumented and can change without notice, so check it before
 relying on a deploy: [deploy/smoke.sh](deploy/smoke.sh) crawls two live pages
 into the scratch database and fails loudly if the client no longer understands
