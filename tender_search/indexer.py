@@ -62,9 +62,9 @@ def document_text(
     """What gets embedded: what is being bought, then who is buying it.
 
     GeM item lists often repeat the same item over and over ("Taxi Hiring -
-    Sedan; Local, Taxi Hiring - Sedan; Local, ..."): 27% of all item text in a
-    sample of 17,533 tenders. Repeats add nothing to the meaning but would
-    weigh on the embedding, so exact repeated segments are dropped.
+    Sedan; Local, Taxi Hiring - Sedan; Local, ..."): 31% of all item text across
+    46,081 tenders. Repeats add nothing to the meaning but would weigh on the
+    embedding, so exact repeated segments are dropped.
     """
     seen: dict[str, str] = {}
     for segment in items.split(","):

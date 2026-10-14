@@ -335,19 +335,21 @@ Two measured problems shaped the indexer:
   6 GB of RAM: a transformer pads every text in a batch to the longest, and
   attention memory grows with batch × length². Model calls now take 32 texts,
   sorted by length so each batch pads to similar sizes: 277 MB.
-- **Repetition in the source.** 27% of all item text is the same item listed
-  again and again in one bid. Exact repeated segments are dropped before
-  embedding: they add nothing to the meaning.
+- **Repetition in the source.** 31% of all item text is the same item listed
+  again and again in one bid (in 7,357 of 46,081 tenders). Exact repeated
+  segments are dropped before embedding: they add nothing to the meaning.
 
-Measured on a 16-thread laptop CPU with 17,533 real tenders:
+Measured on all 46,081 tenders of the October 2026 crawl, in Docker Compose on
+a 16-thread laptop (search: `bench`, 20 queries × 5, four runs):
 
 | | |
 |---|---|
-| Embedding throughput | 28 tenders/s (17,533 in 10.6 min, one-off; later runs embed only what's new) |
-| Search, new query (embedding included) | p50 14 ms, p95 18 ms |
-| Search, repeated query (cached embedding) | p50 7 ms, p95 9 ms |
-| SQL alone | semantic 8 ms (HNSW index scan), keyword 0.2 ms (GIN index) |
-| API container | ~250 MB RAM; image 663 MB with the model baked in |
+| Embedding everything (one-off) | 31.9 min, 24 tenders/s; later runs embed only what is new |
+| Search, new query (embedding included) | p50 11 ms, p95 under 22 ms once warm |
+| Search, repeated query (cached embedding) | p50 3.5 ms, p95 5 ms |
+| SQL alone | semantic 4.0 ms (HNSW index), keyword 0.9 ms (GIN index) |
+| API container | 251 MB RAM; image 663 MB with the model baked in |
+| Database with embeddings | 292 MB, within a free 0.5 GB Neon database |
 
 ```bash
 docker compose run --rm api init-db       # enable pgvector, create the embeddings table
