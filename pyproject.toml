@@ -12,6 +12,7 @@ ignore = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]  # import tender_pipeline from the repo, however pytest is launched
 addopts = "-q"
 
 [tool.mypy]
