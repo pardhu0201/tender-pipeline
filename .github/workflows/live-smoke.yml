@@ -2,14 +2,25 @@ name: Live smoke test
 
 # Manual only. GeM's API is undocumented and can change without notice; this
 # crawls two real pages into a throwaway database to check the client still
-# understands it. Run it from the Actions tab before relying on a deploy.
+# understands it.
+#
+# GeM refuses connections from outside India: on GitHub-hosted runners every
+# request fails with "connection refused" (verified October 2026). So this runs
+# on a self-hosted runner in India, such as the server the pipeline runs on.
+# Without one, run deploy/smoke.sh on that server instead.
 on:
   workflow_dispatch:
+    inputs:
+      runner:
+        description: "Runner label (GeM refuses GitHub-hosted runners)"
+        type: choice
+        options: [self-hosted, ubuntu-latest]
+        default: self-hosted
 
 jobs:
   smoke:
     name: Crawl two live pages from GeM
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner }}
     timeout-minutes: 10
     services:
       postgres:

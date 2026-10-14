@@ -245,10 +245,12 @@ Found while building this, from evidence rather than assumption:
 ## Deploying on a Linux server
 
 ```bash
-git clone <your repo> /opt/tender-pipeline && cd /opt/tender-pipeline
+git clone https://github.com/pardhu0201/tender-pipeline /opt/tender-pipeline
+cd /opt/tender-pipeline
 echo "POSTGRES_PASSWORD=$(openssl rand -hex 16)" > .env       # plus ALERT_WEBHOOK_URL=...
 docker compose up -d db
 docker compose run --rm pipeline init-db
+bash deploy/smoke.sh                                          # can we reach GeM, and is it unchanged?
 crontab deploy/crontab.example
 ```
 
@@ -260,9 +262,16 @@ every 6 hours, a full crawl weekly at a quiet hour, and an hourly
 any Slack-compatible webhook (for Discord, append `/slack` to its webhook URL).
 Postgres is published on `127.0.0.1` only.
 
-GeM's API is undocumented and can change without notice. The **Live smoke
-test** workflow (Actions tab, run manually) crawls two real pages into a
-throwaway database to check the client still understands it.
+**Host it in India.** GeM refuses connections from outside India: from
+GitHub's hosted runners every request fails with `connection refused`, while
+the same requests work from an Indian network (verified October 2026). Use a
+machine or VPS in India.
+
+GeM's API is undocumented and can change without notice, so check it before
+relying on a deploy: [deploy/smoke.sh](deploy/smoke.sh) crawls two live pages
+into the scratch database and fails loudly if the client no longer understands
+them. The **Live smoke test** workflow does the same from the Actions tab, on a
+self-hosted runner in India.
 
 ## Tests
 
