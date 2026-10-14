@@ -17,6 +17,6 @@ addopts = "-q"
 
 [tool.mypy]
 python_version = "3.12"
-files = ["tender_pipeline"]
+files = ["tender_pipeline", "tender_search"]
 check_untyped_defs = true
 warn_unused_ignores = true

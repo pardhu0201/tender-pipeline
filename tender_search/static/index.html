@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tender Search</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --panel: #ffffff; --text: #1d1d1b; --muted: #6b6b66;
+    --line: #e2e2dc; --accent: #1f5fbf; --tag: #eef3fb; --tag-text: #1f4f99;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141413; --panel: #1d1d1b; --text: #ececea; --muted: #a3a39c;
+      --line: #33332f; --accent: #7aa7ec; --tag: #23304a; --tag-text: #a9c4f2;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  form { display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); background: var(--panel);
+         border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  /* Flex items never shrink below their content by default; long state names
+     in the dropdown would otherwise push the row wider than a phone screen. */
+  .row > * { min-width: 0; max-width: 100%; }
+  input[type=search], input[type=text], select {
+    font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--line);
+    border-radius: 8px; padding: 9px 11px; }
+  input[type=search] { flex: 1 1 220px; }
+  select, input[type=text] { flex: 1 1 160px; }
+  button { font: inherit; border: 0; border-radius: 8px; padding: 9px 16px; cursor: pointer;
+           background: var(--accent); color: #fff; }
+  button.link { background: none; color: var(--accent); padding: 0; }
+  label { color: var(--muted); display: inline-flex; gap: 6px; align-items: center; }
+  #status { color: var(--muted); margin: 16px 2px 8px; min-height: 1.5em; }
+  .hit { background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+         padding: 12px 14px; margin-bottom: 10px; }
+  .hit h2 { font-size: 1rem; margin: 0 0 4px; overflow-wrap: anywhere; }
+  .meta { color: var(--muted); font-size: 0.9rem; display: flex; gap: 6px 14px; flex-wrap: wrap; }
+  .tag { background: var(--tag); color: var(--tag-text); border-radius: 999px; padding: 0 8px;
+         font-size: 0.8rem; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Tender Search</h1>
+  <p class="sub">Semantic + keyword search over open Indian government tenders from GeM.</p>
+
+  <form id="form">
+    <div class="row">
+      <input type="search" id="q" placeholder="e.g. fire safety equipment, laptops for schools, IS 15683" required>
+      <button type="submit">Search</button>
+    </div>
+    <div class="row">
+      <select id="state" aria-label="State"><option value="">Any state</option></select>
+      <input type="text" id="ministry" placeholder="Ministry contains…" aria-label="Ministry">
+      <label><input type="checkbox" id="open" checked> Open bids only</label>
+    </div>
+  </form>
+
+  <div id="status" role="status"></div>
+  <div id="results"></div>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const fmt = (iso) => new Date(iso).toLocaleString("en-IN",
+  { timeZone: "Asia/Kolkata", day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+
+function el(tag, attrs = {}, text) {
+  const node = document.createElement(tag);
+  Object.assign(node, attrs);
+  if (text !== undefined) node.textContent = text;  // tender text is data, never HTML
+  return node;
+}
+
+function render(hits, heading) {
+  const results = $("results");
+  results.replaceChildren();
+  $("status").textContent = heading;
+  for (const hit of hits) {
+    const card = el("article", { className: "hit" });
+    card.append(el("h2", {}, hit.items || "(no item description)"));
+    const meta = el("div", { className: "meta" });
+    meta.append(
+      el("span", {}, hit.bid_number),
+      el("span", {}, hit.buyer || "Unknown buyer"),
+      el("span", {}, "closes " + fmt(hit.closes) + " IST"),
+    );
+    if (hit.quantity) meta.append(el("span", {}, "qty " + hit.quantity.toLocaleString("en-IN")));
+    for (const source of hit.matched_by) meta.append(el("span", { className: "tag" }, source));
+    const doc = el("a", { href: hit.document_url, target: "_blank", rel: "noopener" }, "bid document");
+    const more = el("button", { className: "link", type: "button" }, "similar tenders");
+    more.addEventListener("click", () => showSimilar(hit.bid_number));
+    meta.append(doc, more);
+    card.append(meta);
+    results.append(card);
+  }
+}
+
+async function getJSON(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error((await response.json()).detail || response.statusText);
+  return response.json();
+}
+
+async function runSearch(event) {
+  event?.preventDefault();
+  const params = new URLSearchParams({ q: $("q").value.trim(), open_only: $("open").checked });
+  if ($("state").value) params.set("state", $("state").value);
+  if ($("ministry").value.trim()) params.set("ministry", $("ministry").value.trim());
+  $("status").textContent = "Searching…";
+  try {
+    const data = await getJSON("/search?" + params);
+    render(data.results, `${data.count} results in ${data.took_ms} ms`);
+  } catch (error) {
+    $("status").textContent = "Search failed: " + error.message;
+  }
+}
+
+async function showSimilar(bid) {
+  $("status").textContent = "Finding tenders similar to " + bid + "…";
+  try {
+    const hits = await getJSON("/similar?" + new URLSearchParams({ bid, open_only: $("open").checked }));
+    render(hits, `Tenders most similar to ${bid}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } catch (error) {
+    $("status").textContent = "Could not load similar tenders: " + error.message;
+  }
+}
+
+async function loadStates() {
+  try {
+    const facets = await getJSON("/facets");
+    for (const { value, open_bids } of facets.state) {
+      $("state").append(el("option", { value }, `${value} (${open_bids})`));
+    }
+  } catch { /* the dropdown is a convenience; search works without it */ }
+}
+
+$("form").addEventListener("submit", runSearch);
+loadStates();
+</script>
+</body>
+</html>

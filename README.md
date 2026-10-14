@@ -2,13 +2,20 @@
 
 [![CI](https://github.com/pardhu0201/tender-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/pardhu0201/tender-pipeline/actions/workflows/ci.yml)
 ![Python 3.12](https://img.shields.io/badge/python-3.12-blue)
-![PostgreSQL](https://img.shields.io/badge/postgresql-13%2B-336791)
+![PostgreSQL + pgvector](https://img.shields.io/badge/postgresql-16%20%2B%20pgvector-336791)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-A fault-tolerant ingestion pipeline that collects Indian government tenders from
-**GeM (Government e-Marketplace)** into PostgreSQL: incremental and full crawls,
-idempotent upserts, data-quality gates, a quarantine for bad records, and the
-ability to replay every stored record through a fixed parser without re-crawling.
+Collects Indian government tenders from **GeM (Government e-Marketplace)** and
+makes them searchable. Two parts, one database:
+
+1. **`tender_pipeline`**: a fault-tolerant ingestion pipeline into PostgreSQL.
+   Incremental and full crawls, idempotent upserts, data-quality gates, a
+   quarantine for bad records, and replay of every stored record through a
+   fixed parser without re-crawling.
+2. **`tender_search`**: hybrid semantic + keyword search over those tenders.
+   ONNX sentence embeddings in pgvector, fused with Postgres full-text search,
+   served by a FastAPI app with a search page and "similar tenders".
+   [Jump to it](#semantic-search-tender_search).
 
 GeM is India's national public-procurement portal; at the time of writing
 (October 2026) its listing carried **~45,600 open bids**. GeM publishes no API,
@@ -43,13 +50,17 @@ flowchart LR
 
 ## Quick start
 
-Needs Docker (or Python 3.12 and any PostgreSQL 13+).
+Needs Docker (or Python 3.12 and PostgreSQL 16 with the pgvector extension;
+the pipeline alone runs on any PostgreSQL 13+).
 
 ```bash
-docker compose up -d db                                         # Postgres on localhost:5433
+docker compose up -d db                                         # Postgres on 127.0.0.1:5433
 docker compose run --rm pipeline init-db                        # create the schema
 docker compose run --rm pipeline run --mode full --max-pages 5  # try it: 50 tenders
 docker compose run --rm pipeline report                         # what did we get?
+docker compose run --rm api init-db                             # then make it searchable:
+docker compose run --rm api embed
+docker compose up -d api                                        # open http://127.0.0.1:8000
 ```
 
 A complete crawl is `run --mode full` (about 1.5 hours at a polite one request
@@ -242,6 +253,92 @@ Found while building this, from evidence rather than assumption:
    the official who created it. Nothing needs it, so it is dropped before
    storage.
 
+## Semantic search (`tender_search`)
+
+The second part of the project turns the collected tenders into a search
+product. Ask in plain language and get the matching open bids, even when GeM
+words them differently:
+
+| Query | Top result | Found by |
+|---|---|---|
+| `fire safety equipment` | "FIRE **SAFTY** EQUIPMENTS" (GeM's typo) | semantic |
+| `IS 15683` (a standard number) | "Portable Fire Extinguishers (V3) ISI Marked to IS 15683" | semantic + keyword |
+| `medical oxygen cylinders` | "Medical Oxygen Gas Cylinders - Steel (Normalized) (V2)" | semantic + keyword |
+
+Every result says which retriever found it, so the value of each is visible:
+keyword search can never match a typo, and embeddings blur exact identifiers.
+
+```mermaid
+flowchart LR
+    T[("tenders")] -- "new or changed rows" --> E["embed<br/>bge-small-en-v1.5 (ONNX)"]
+    E --> V[("tender_embeddings<br/>vector(384), HNSW index")]
+    Q["query"] --> S["semantic<br/>cosine nearest neighbours"]
+    Q --> K["keyword<br/>Postgres full-text search"]
+    V --> S
+    T --> K
+    S --> F["Reciprocal Rank Fusion"]
+    K --> F
+    F --> A["FastAPI<br/>/search, /similar, search page"]
+```
+
+- **Embeddings.** Each tender's "what is being bought, and by whom" is embedded
+  with `BAAI/bge-small-en-v1.5` (384 dimensions) through `fastembed`, which runs
+  the model on ONNX Runtime. No PyTorch: the API container uses about 250 MB of
+  RAM, small enough for a free hosting tier.
+- **Incremental, like the crawler.** Each embedding stores the content hash of
+  the tender it came from, so `embed` touches only new or changed tenders (or
+  everything, if the model changes). `deploy/run.sh` runs it after every crawl.
+- **Hybrid retrieval.** pgvector finds the 50 nearest tenders by cosine
+  distance (HNSW index), Postgres full-text search finds the 50 best keyword
+  matches (GIN index), and **Reciprocal Rank Fusion** merges them by rank:
+  `score = Σ 1 / (60 + rank)`. Ranks need no calibration between two very
+  different scoring scales, and a tender both retrievers like rises furthest.
+- **Filters that don't starve the index.** State, ministry, open-only and
+  "closing within N hours" filters run inside both queries. pgvector 0.8's
+  iterative HNSW scan keeps walking the graph until enough rows pass the
+  filters, instead of filtering a fixed candidate set down to nothing.
+- **"Similar tenders".** Any tender's own embedding finds its nearest
+  neighbours: the "who else is buying this?" question a bidder asks.
+
+Two measured problems shaped the indexer:
+
+- **Padding blew up memory.** Embedding 256 real tenders per model call took
+  6 GB of RAM: a transformer pads every text in a batch to the longest, and
+  attention memory grows with batch × length². Model calls now take 32 texts,
+  sorted by length so each batch pads to similar sizes: 277 MB.
+- **Repetition in the source.** 27% of all item text is the same item listed
+  again and again in one bid. Exact repeated segments are dropped before
+  embedding: they add nothing to the meaning.
+
+Measured on a 16-thread laptop CPU with 17,533 real tenders:
+
+| | |
+|---|---|
+| Embedding throughput | 28 tenders/s (17,533 in 10.6 min, one-off; later runs embed only what's new) |
+| Search, new query (embedding included) | p50 14 ms, p95 18 ms |
+| Search, repeated query (cached embedding) | p50 7 ms, p95 9 ms |
+| SQL alone | semantic 8 ms (HNSW index scan), keyword 0.2 ms (GIN index) |
+| API container | ~250 MB RAM; image 663 MB with the model baked in |
+
+```bash
+docker compose run --rm api init-db       # enable pgvector, create the embeddings table
+docker compose run --rm api embed         # embed new and changed tenders
+docker compose up -d api                  # search page and API on http://127.0.0.1:8000
+docker compose run --rm api search "laptops for schools" --state "Uttar Pradesh"
+docker compose run --rm api bench         # latency: new vs repeated queries
+```
+
+| Endpoint | What it returns |
+|---|---|
+| `GET /search?q=&state=&ministry=&open_only=&closing_within_hours=&limit=` | Ranked tenders, with `matched_by` and timing |
+| `GET /similar?bid=GEM/2026/B/...` | The tenders closest in meaning to that one |
+| `GET /facets` | Open-bid counts per state and ministry |
+| `GET /health` | Tender and embedding counts, model name |
+| `GET /docs` | Interactive OpenAPI documentation |
+
+If the text recipe in `tender_search/indexer.py` changes, run `embed --rebuild`:
+content hashes only track changes in the source data.
+
 ## Deploying on a Linux server
 
 ```bash
@@ -250,7 +347,9 @@ cd /opt/tender-pipeline
 echo "POSTGRES_PASSWORD=$(openssl rand -hex 16)" > .env       # plus ALERT_WEBHOOK_URL=...
 docker compose up -d db
 docker compose run --rm pipeline init-db
+docker compose run --rm api init-db
 bash deploy/smoke.sh                                          # can we reach GeM, and is it unchanged?
+docker compose up -d api                                      # search on 127.0.0.1:8000
 crontab deploy/crontab.example
 ```
 
@@ -277,14 +376,20 @@ self-hosted runner in India.
 
 ```bash
 pytest                                    # offline unit tests
-TEST_DATABASE_URL=postgresql://tender:tender@localhost:5433/tenders_test pytest   # + PostgreSQL
+TEST_DATABASE_URL=postgresql://tender:tender@127.0.0.1:5433/tenders_test pytest   # + PostgreSQL
 ```
 
-137 tests with 98% line coverage. CI runs ruff (lint and formatting), mypy,
-and the whole suite against a real Postgres, fails if coverage drops below 95%,
-and builds the Docker image.
+169 tests with 98% line coverage. CI runs ruff (lint and formatting), mypy,
+and the whole suite against Postgres with pgvector, fails if coverage drops
+below 95%, and builds both Docker images.
 
-The 107 unit tests run against real GeM responses saved as fixtures (12 records
+The search tests use a deterministic hashing embedder (texts that share words
+land close together), so ranking, filters, fusion, the API and incremental
+re-embedding are all tested without downloading a model. The real ONNX
+embedder's own logic (length-sorted batching, the query cache) is tested
+against a stand-in model object.
+
+The pipeline's unit tests run against real GeM responses saved as fixtures (12 records
 chosen to cover every edge case above), with a fake HTTP session and a fake
 clock. That covers retries, backoff, `Retry-After`, adaptive slowdown, session
 refresh, robots.txt and throttling deterministically and without network

@@ -17,6 +17,9 @@ htmlcov/
 *.env
 !.env.example
 
+# Local tooling
+.claude/
+
 # OS / editors
 .DS_Store
 Thumbs.db

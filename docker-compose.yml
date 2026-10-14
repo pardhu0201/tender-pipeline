@@ -1,6 +1,7 @@
 services:
   db:
-    image: postgres:16-alpine
+    # Postgres 16 with the pgvector extension, for semantic search.
+    image: pgvector/pgvector:0.8.0-pg16
     environment:
       POSTGRES_USER: tender
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tender}
@@ -30,6 +31,22 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+  # The search API and page on http://127.0.0.1:8000. Also runs the embedding
+  # job: `docker compose run --rm api embed`.
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.search
+    environment:
+      DATABASE_URL: postgresql://tender:${POSTGRES_PASSWORD:-tender}@db:5432/tenders
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
 
 volumes:
   pgdata:

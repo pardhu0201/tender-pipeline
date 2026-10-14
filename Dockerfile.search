@@ -1,0 +1,30 @@
+# The search API: FastAPI + an ONNX embedding model (no PyTorch).
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    FASTEMBED_CACHE_PATH=/opt/models \
+    API_HOST=0.0.0.0 \
+    API_PORT=8000
+
+WORKDIR /app
+
+COPY requirements.txt requirements-search.txt ./
+RUN pip install -r requirements-search.txt
+
+# Bake the model into the image so containers start offline and fast.
+ARG EMBEDDING_MODEL=BAAI/bge-small-en-v1.5
+ENV EMBEDDING_MODEL=${EMBEDDING_MODEL}
+RUN python -c "import os; from fastembed import TextEmbedding; TextEmbedding(os.environ['EMBEDDING_MODEL'])"
+
+COPY tender_pipeline ./tender_pipeline
+COPY tender_search ./tender_search
+
+RUN useradd --create-home --uid 10001 search && chmod -R a+rX /opt/models
+USER search
+
+EXPOSE 8000
+ENTRYPOINT ["python", "-m", "tender_search"]
+CMD ["serve"]

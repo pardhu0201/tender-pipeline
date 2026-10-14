@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Cron entry point. Runs one pipeline job inside docker compose, never two at once.
+# Cron entry point. Runs one pipeline job inside docker compose, never two at
+# once, then embeds whatever it added so search stays in step with the data.
 #
 #   deploy/run.sh incremental     # new bids since the last run
 #   deploy/run.sh full            # the whole listing (weekly)
@@ -18,4 +19,7 @@ if ! flock --nonblock 9; then
 fi
 
 echo "$(date -Is) starting $MODE run"
-docker compose run --rm pipeline run --mode "$MODE"
+docker compose run --rm -T pipeline run --mode "$MODE"
+
+echo "$(date -Is) embedding new and changed tenders"
+docker compose run --rm -T api embed
