@@ -404,7 +404,8 @@ def test_cli_end_to_end(conn, listing_docs, cli_env, tmp_path, capsys):
     assert len(target.read_text(encoding="utf-8").splitlines()) == 13  # header + 12 rows
 
     assert main(["status"]) == 0
-    assert "full" in capsys.readouterr().out
+    out = capsys.readouterr().out
+    assert "full" in out and "100.00%" in out  # a complete full crawl shows its coverage
 
 
 def test_cli_skips_quietly_when_another_run_holds_the_lock(

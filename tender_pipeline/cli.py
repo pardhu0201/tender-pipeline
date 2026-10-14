@@ -95,17 +95,24 @@ def configure_logging(level: str) -> None:
     logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 
+STATUS_COLUMNS = (
+    "id", "mode", "status", "started", "took", "pages", "records", "new", "changed", "rej.",
+    "coverage",
+)  # fmt: skip
+
+
+def _status_row(run: tuple) -> tuple:
+    run_id, mode, status, started, took, pages, seen, new, changed, rejected, coverage = run[:11]
+    shown_coverage = f"{coverage:.2%}" if coverage is not None else None
+    return (
+        run_id, mode, status, started, _minutes(took), pages, seen, new, changed, rejected,
+        shown_coverage,
+    )  # fmt: skip
+
+
 def _status(conn: psycopg.Connection, settings: Settings, max_age_hours: float | None) -> int:
     runs = db.recent_runs(conn, SOURCE)
-    print_table(
-        sys.stdout,
-        "Recent runs",
-        ["id", "mode", "status", "started", "took", "pages", "records", "new", "changed", "rej."],
-        [
-            (run_id, mode, status, started, _minutes(took), pages, seen, new, changed, rejected)
-            for run_id, mode, status, started, took, pages, seen, new, changed, rejected, *_ in runs
-        ],
-    )
+    print_table(sys.stdout, "Recent runs", list(STATUS_COLUMNS), [_status_row(r) for r in runs])
     for run_id, *_, error, issues in runs[:3]:
         if error:
             print(f"  run {run_id} error: {error}")

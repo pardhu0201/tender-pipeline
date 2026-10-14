@@ -63,8 +63,9 @@ docker compose run --rm api embed
 docker compose up -d api                                        # open http://127.0.0.1:8000
 ```
 
-A complete crawl is `run --mode full` (about 1.5 hours at a polite one request
-per second). After that, `run` (incremental by default) fetches only what is new.
+A complete crawl is `run --mode full`: 77 minutes for 46,156 bids at a polite
+one request per second (measured October 2026). After that, `run` (incremental
+by default) fetches only what is new, typically in a minute or two.
 
 Without Docker:
 
@@ -84,23 +85,29 @@ python -m tender_pipeline run --mode full --max-pages 5
 | `export [--format jsonl\|csv] [--open-only] [--output FILE]` | Write a clean dataset for analytics or ML, streamed in constant memory. |
 | `reprocess` | Re-derive every column from stored raw records after a parser fix. |
 
-Sample `report` output from a short live run:
+`report` after a full crawl (14 October 2026):
 
 ```
-Open bids by state
-  state          open bids
-  -------------  ---------
-  Gujarat        2
-  Uttar Pradesh  2
-  Chhattisgarh   1
-  Odisha         1
+Tenders stored: 46,081   open now: 46,081   closing within 48h: 9,529
+Central ministries: 63   states: 33   last refreshed: 14 Oct 07:35 IST
 
-Closing soonest
-  bid number         items                                             buyer                closes
-  -----------------  ------------------------------------------------  -------------------  ----------------
-  GEM/2026/R/752126  Glow Sign Board & Iron Flax Boards                Ministry of Defence  15 Oct 19:00 IST
-  GEM/2026/R/752127  Television (V3),data wall display                 Odisha               15 Oct 19:00 IST
-  GEM/2026/R/752133  AIR COMPRESSOR, SCREW, 7.5KW, TANK MOUNTED        Ministry of Steel    15 Oct 19:00 IST
+Open bids by central ministry
+  ministry                                             open bids  % of central
+  ---------------------------------------------------  ---------  ------------
+  Ministry of Defence                                  15,290     42.2
+  Ministry of Petroleum and Natural Gas                2,307      6.4
+  PMO                                                  1,963      5.4
+  Ministry of Railways                                 1,582      4.4
+  Ministry of Power                                    1,533      4.2
+
+Open bids by state
+  state              open bids
+  -----------------  ---------
+  Gujarat            2,273
+  Uttar Pradesh      2,101
+  Chhattisgarh       650
+  Jammu and Kashmir  312
+  Kerala             311
 ```
 
 ## How it works
@@ -148,12 +155,29 @@ start − 6 h overlap)*. It fetches only the recent end of the listing instead o
 all ~4,600 pages. Only a run that read its whole range can be that baseline: a
 try-out capped with `--max-pages` never is, so the next run falls back to full.
 
-The sort order is deliberate. Offset pagination over a live listing shifts as
-you read it. Newest-first means newly published bids push records *down*, which
-shows up as a harmless duplicate (the upsert is idempotent), never as a record
-silently skipped. A weekly `--mode full` crawl refreshes every open bid (for
-example, deadlines extended by corrigenda) and measures **coverage**: unique
-records seen ÷ the total GeM reports.
+Offset pagination over a live listing shifts while you read it, both ways.
+Bids published mid-crawl land at the top and push everything *down*, so a
+record shows up twice (harmless: the upsert is idempotent). Bids that *close*
+mid-crawl vanish and pull everything *up*, so a record can slip past a page
+boundary unseen. The pipeline measures this rather than assuming it away:
+every full crawl records **coverage**, unique records seen ÷ the total GeM
+reports, and a run below 95% is flagged. The weekly full crawl runs at 01:30
+IST, when few bids close, and also refreshes every open bid (deadlines extended
+by corrigenda, for example).
+
+| Measured, October 2026 | Full crawl | Incremental run right after |
+|---|---|---|
+| Pages / requests | 4,616 / 4,621 | 73 |
+| Time | 77.4 min | 74 s |
+| Rows read → unique bids | 46,156 → 46,040 (116 duplicates) | 730 → 41 new |
+| Coverage of GeM's reported total | 99.75% (46,040 of 46,155) | n/a |
+| HTTP | 3 retries (GeM 500s), 0 session refreshes, 0 slowdowns | 0 retries |
+| Rejected records | 0 | 0 |
+
+All 41 bids the incremental run found had been published *during* the full
+crawl, which matches the duplicates. None was a bid the full pass had
+skipped: the 0.25% the pass missed sits deeper in the listing, where only the
+next full crawl looks again.
 
 ### Storage: idempotent, change-aware, replayable
 
@@ -196,7 +220,10 @@ See [schema.sql](tender_pipeline/sql/schema.sql) and the example queries in
 [analytics.sql](sql/analytics.sql): window functions, CTEs, ranked search,
 `unnest` over category arrays, and finding bids that vanished before their
 deadline. `export` streams the table out as JSON Lines or CSV through a
-server-side cursor, 2,000 rows at a time, so memory stays flat at any size.
+server-side cursor, 2,000 rows at a time, so memory stays flat at any size:
+all 46,081 tenders export in 3.0 s (43 MB of JSONL) at a peak of 55 MB of RAM,
+against 48 MB for a command that exports nothing. The whole database, raw
+payloads and indexes included, is 122 MB before embeddings.
 
 ### Operating it safely
 
@@ -244,11 +271,13 @@ Found while building this, from evidence rather than assumption:
    is derived. It knows the 36 states and UTs plus old names such as Orissa.
 4. **Silent truncation.** Item names arrive cut off mid-word at about 100
    characters, and the detail field at 1,024. Search uses the longer field.
-5. **Ties make pagination unstable.** Many reverse auctions share an identical
-   start time, and the endpoint offers no secondary sort key, so a tied record
-   can move between pages mid-crawl. The first live run saw 30 rows but 29
-   unique records. The overlap window, in-run duplicate counting and full-crawl
-   coverage check exist for exactly this.
+5. **The listing moves while you read it.** Reverse auctions appear in batches
+   at the top, and bids close continuously, so a 77-minute crawl reads a
+   moving target: 116 duplicates and a 0.25% shortfall in the full crawl
+   above. The endpoint offers no stable cursor or secondary sort key (dozens of
+   auctions share an identical start time), so the pipeline counts in-run
+   duplicates, measures coverage on every full crawl, and re-reads the newest
+   part of the listing every six hours.
 6. **Personal data minimisation.** Each record includes the GeM account ID of
    the official who created it. Nothing needs it, so it is dropped before
    storage.

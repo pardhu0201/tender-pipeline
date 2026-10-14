@@ -9,7 +9,7 @@ set -euo pipefail
 MODE="${1:-incremental}"
 cd "$(dirname "$0")/.."
 
-# A full crawl takes ~1.5 hours; if one is still going, skip this slot quietly
+# A full crawl takes ~80 minutes; if one is still going, skip this slot quietly
 # without even starting a container. (The pipeline's own Postgres advisory lock
 # is the real guarantee: it also covers runs started by hand or elsewhere.)
 exec 9>/tmp/tender-pipeline.lock

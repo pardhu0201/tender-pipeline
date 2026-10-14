@@ -281,7 +281,8 @@ def recent_runs(conn: psycopg.Connection, source: str, limit: int = 10) -> list[
     return conn.execute(
         """
         SELECT id, mode, status, started_at, finished_at - started_at AS duration,
-               pages_fetched, records_seen, inserted, updated, rejected, error,
+               pages_fetched, records_seen, inserted, updated, rejected,
+               (quality ->> 'coverage')::float AS coverage, error,
                coalesce(quality -> 'issues', '[]'::jsonb) AS issues
         FROM scrape_runs WHERE source = %s
         ORDER BY started_at DESC LIMIT %s
