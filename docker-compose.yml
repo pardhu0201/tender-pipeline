@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: tender
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tender}
+      POSTGRES_DB: tenders
+    ports:
+      # Localhost only, and 5433 so it never collides with a locally installed Postgres.
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tender -d tenders"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # A run-to-completion job, not a server: `docker compose run --rm pipeline <command>`.
+  pipeline:
+    build: .
+    profiles: ["job"]
+    environment:
+      DATABASE_URL: postgresql://tender:${POSTGRES_PASSWORD:-tender}@db:5432/tenders
+      REQUEST_DELAY_SECONDS: ${REQUEST_DELAY_SECONDS:-1.0}
+      ALERT_WEBHOOK_URL: ${ALERT_WEBHOOK_URL:-}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

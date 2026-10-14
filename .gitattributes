@@ -1,0 +1,3 @@
+# Store and check out text files with LF everywhere, so deploy/run.sh and
+# friends work on a Linux server even when committed from Windows.
+* text=auto eol=lf

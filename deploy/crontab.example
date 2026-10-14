@@ -1,0 +1,12 @@
+# Install with `crontab -e` on the server; paths assume the repo lives at /opt/tender-pipeline.
+# Times below are UTC (the default on cloud VMs; Debian/Ubuntu cron ignores CRON_TZ).
+
+# Every 6 hours (05:45, 11:45, 17:45, 23:45 IST): pick up newly published bids.
+15 */6 * * *  bash /opt/tender-pipeline/deploy/run.sh incremental >> /var/log/tender-pipeline.log 2>&1
+
+# Saturday 20:00 UTC = Sunday 01:30 IST, when GeM is quiet: full crawl that refreshes
+# every open bid and measures coverage (~1.5 hours at one request per second).
+0 20 * * 6    bash /opt/tender-pipeline/deploy/run.sh full >> /var/log/tender-pipeline.log 2>&1
+
+# Hourly: alert (via ALERT_WEBHOOK_URL) if no run has succeeded in the last 13 hours.
+0 * * * *     cd /opt/tender-pipeline && docker compose run --rm pipeline status --max-age-hours 13 > /dev/null 2>&1

@@ -1,0 +1,1167 @@
+{
+ "status": 1,
+ "code": 200,
+ "message": "Bid result",
+ "response": {
+  "response": {
+   "numFound": 12,
+   "start": 0,
+   "numFoundExact": true,
+   "docs": [
+    {
+     "id": "10017598",
+     "b_id": [
+      10017598
+     ],
+     "b_bid_number": [
+      "GEM/2026/R/750456"
+     ],
+     "b_category_name": [
+      "ALTERNATOR ASSY,PASSENGER FAN 24V,IGNITION SWITCH,BRAKE LIGHT SWITCH ASSY,TAIL LIGHT GLASS"
+     ],
+     "b_total_quantity": [
+      5
+     ],
+     "b_status": [
+      1
+     ],
+     "b_bid_type": [
+      2
+     ],
+     "b_is_bunch": [
+      5
+     ],
+     "b_type": [
+      0
+     ],
+     "b_bid_to_ra": [
+      1
+     ],
+     "b_buyer_status": [
+      0
+     ],
+     "b_eval_type": [
+      0
+     ],
+     "final_start_date_sort": [
+      "2026-10-12T20:00:00Z"
+     ],
+     "final_end_date_sort": [
+      "2026-10-13T20:00:00Z"
+     ],
+     "bd_category_name": [
+      "ALTERNATOR ASSY,PASSENGER FAN 24V,IGNITION SWITCH,BRAKE LIGHT SWITCH ASSY,TAIL LIGHT GLASS"
+     ],
+     "b_is_custom_item": [
+      0
+     ],
+     "b_bid_number_parent": [
+      "GEM/2026/B/8099767"
+     ],
+     "b_id_parent": [
+      9965254
+     ],
+     "is_high_value": [
+      false
+     ],
+     "b_ra_to_bid": [
+      1
+     ],
+     "ra_b_status": [
+      1
+     ],
+     "b_is_inactive": [
+      0
+     ],
+     "ra_b_buyer_status": [
+      2
+     ],
+     "b_cat_id": [
+      "home_boq_boql_boql_boq"
+     ],
+     "b.b_created_by": [
+      "REDACTED"
+     ],
+     "ba_is_single_packet": [
+      0
+     ],
+     "ba_is_global_tendering": [
+      0
+     ],
+     "is_rc_bid": [
+      0
+     ],
+     "ba_official_details_minName": [
+      "Ministry of Defence"
+     ],
+     "ba_official_details_deptName": [
+      "Department of Military Affairs"
+     ],
+     "bd_details_is_boq": [
+      true
+     ],
+     "bd_details_new_boq": [
+      true
+     ],
+     "bid_schedule": [],
+     "parent_bid_schedule": []
+    },
+    {
+     "id": "10030598",
+     "b_id": [
+      10030598
+     ],
+     "b_bid_number": [
+      "GEM/2026/R/752138"
+     ],
+     "b_category_name": [
+      "Mannitol 20 percent 100 ml bottle,Mannitol 20 percent injection, bottle of 350 ml,Acetazolamide 250"
+     ],
+     "b_total_quantity": [
+      8985
+     ],
+     "b_status": [
+      1
+     ],
+     "b_bid_type": [
+      2
+     ],
+     "b_is_bunch": [
+      5
+     ],
+     "b_type": [
+      0
+     ],
+     "b_bid_to_ra": [
+      1
+     ],
+     "b_buyer_status": [
+      0
+     ],
+     "b_eval_type": [
+      1
+     ],
+     "final_start_date_sort": [
+      "2026-10-14T19:00:00Z"
+     ],
+     "final_end_date_sort": [
+      "2026-10-15T19:00:00Z"
+     ],
+     "b_is_custom_item": [
+      0
+     ],
+     "b_bid_number_parent": [
+      "GEM/2026/B/7618992"
+     ],
+     "b_id_parent": [
+      9417541
+     ],
+     "is_high_value": [
+      false
+     ],
+     "b_ra_to_bid": [
+      1
+     ],
+     "ra_b_status": [
+      1
+     ],
+     "b_is_inactive": [
+      0
+     ],
+     "ra_b_buyer_status": [
+      2
+     ],
+     "b_cat_id": [
+      "home_boq_boql_boql_boq"
+     ],
+     "b.b_created_by": [
+      "REDACTED"
+     ],
+     "ba_is_single_packet": [
+      0
+     ],
+     "ba_is_global_tendering": [
+      0
+     ],
+     "is_rc_bid": [
+      0
+     ],
+     "ba_official_details_minName": [
+      "Ministry of Defence"
+     ],
+     "ba_official_details_deptName": [
+      "Department of Military Affairs"
+     ],
+     "bid_schedule": [
+      {
+       "bs_id": "6522882",
+       "bs_bid_id": "10030598",
+       "bs_title": "Schedule 1",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "6522883",
+       "bs_bid_id": "10030598",
+       "bs_title": "Schedule 2",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "6522884",
+       "bs_bid_id": "10030598",
+       "bs_title": "Schedule 3",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "6522885",
+       "bs_bid_id": "10030598",
+       "bs_title": "Schedule 4",
+       "bs_status": "0"
+      }
+     ],
+     "parent_bid_schedule": [
+      {
+       "bs_id": "5859082",
+       "bs_bid_id": "9417541",
+       "bs_title": "Schedule 1",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "5859083",
+       "bs_bid_id": "9417541",
+       "bs_title": "Schedule 2",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "5859084",
+       "bs_bid_id": "9417541",
+       "bs_title": "Schedule 3",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "5859085",
+       "bs_bid_id": "9417541",
+       "bs_title": "Schedule 4",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "5859086",
+       "bs_bid_id": "9417541",
+       "bs_title": "Schedule 5",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "5964465",
+       "bs_bid_id": "9417541",
+       "bs_title": "Schedule 1",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "5964466",
+       "bs_bid_id": "9417541",
+       "bs_title": "Schedule 2",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "5964467",
+       "bs_bid_id": "9417541",
+       "bs_title": "Schedule 3",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "5964468",
+       "bs_bid_id": "9417541",
+       "bs_title": "Schedule 4",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "5964469",
+       "bs_bid_id": "9417541",
+       "bs_title": "Schedule 5",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "6051859",
+       "bs_bid_id": "9417541",
+       "bs_title": "Schedule 1",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "6051860",
+       "bs_bid_id": "9417541",
+       "bs_title": "Schedule 2",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "6051861",
+       "bs_bid_id": "9417541",
+       "bs_title": "Schedule 3",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "6051862",
+       "bs_bid_id": "9417541",
+       "bs_title": "Schedule 4",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "6051863",
+       "bs_bid_id": "9417541",
+       "bs_title": "Schedule 5",
+       "bs_status": "0"
+      }
+     ]
+    },
+    {
+     "id": "9898616",
+     "b_id": [
+      9898616
+     ],
+     "b_bid_number": [
+      "GEM/2026/B/8041403"
+     ],
+     "b_category_name": [
+      "Cryogenic Physical Quantity Measurement System"
+     ],
+     "b_total_quantity": [
+      1
+     ],
+     "b_status": [
+      1
+     ],
+     "b_bid_type": [
+      1
+     ],
+     "b_is_bunch": [
+      1
+     ],
+     "b_type": [
+      0
+     ],
+     "b_bid_to_ra": [
+      0
+     ],
+     "b_buyer_status": [
+      0
+     ],
+     "b_eval_type": [
+      0
+     ],
+     "final_start_date_sort": [
+      "2026-09-22T19:43:20Z"
+     ],
+     "final_end_date_sort": [
+      "2026-10-13T20:00:00Z"
+     ],
+     "bd_category_name": [
+      "Cryogenic Physical Quantity Measurement System"
+     ],
+     "b_is_custom_item": [
+      1
+     ],
+     "is_high_value": [
+      false
+     ],
+     "b_ra_to_bid": [
+      1
+     ],
+     "b_is_inactive": [
+      0
+     ],
+     "b_cat_id": [
+      "home_univ_univ_univ_univ"
+     ],
+     "b.b_created_by": [
+      "REDACTED"
+     ],
+     "ba_is_single_packet": [
+      0
+     ],
+     "ba_is_global_tendering": [
+      0
+     ],
+     "is_rc_bid": [
+      0
+     ],
+     "ba_official_details_minName": [
+      "Ministry of Education"
+     ],
+     "ba_official_details_deptName": [
+      "Department of Higher Education"
+     ],
+     "bid_schedule": [],
+     "parent_bid_schedule": []
+    },
+    {
+     "id": "9977136",
+     "b_id": [
+      9977136
+     ],
+     "b_bid_number": [
+      "GEM/2026/B/8110219"
+     ],
+     "b_category_name": [
+      "Facility Management Services - LumpSum Based - Healthcare; MEDICAL EQUIPMENT; Consumables to be pro"
+     ],
+     "b_total_quantity": [
+      1
+     ],
+     "b_status": [
+      1
+     ],
+     "b_bid_type": [
+      1
+     ],
+     "b_is_bunch": [
+      1
+     ],
+     "b_type": [
+      1
+     ],
+     "b_bid_to_ra": [
+      0
+     ],
+     "b_buyer_status": [
+      0
+     ],
+     "b_eval_type": [
+      0
+     ],
+     "final_start_date_sort": [
+      "2026-10-01T19:12:03Z"
+     ],
+     "final_end_date_sort": [
+      "2026-10-13T20:00:00Z"
+     ],
+     "bd_category_name": [
+      "Facility Management Services - LumpSum Based - Healthcare; MEDICAL EQUIPMENT; Consumables to be provided by service provider (inclusive in contract cost)"
+     ],
+     "b_is_custom_item": [
+      0
+     ],
+     "is_high_value": [
+      false
+     ],
+     "b_ra_to_bid": [
+      1
+     ],
+     "b_is_inactive": [
+      0
+     ],
+     "b_cat_id": [
+      "services_home_fa85086605_fa43870134"
+     ],
+     "b.b_created_by": [
+      "REDACTED"
+     ],
+     "ba_is_single_packet": [
+      0
+     ],
+     "ba_is_global_tendering": [
+      0
+     ],
+     "is_rc_bid": [
+      0
+     ],
+     "ba_official_details_deptName": [
+      "Urban Development and Housing Department Jharkhand"
+     ],
+     "bid_schedule": [],
+     "parent_bid_schedule": []
+    },
+    {
+     "id": "9958861",
+     "b_id": [
+      9958861
+     ],
+     "b_bid_number": [
+      "GEM/2026/B/8094041"
+     ],
+     "b_category_name": [
+      "Biochemistry,Pathology,DSRU,Glasswares Labwares,Misc items"
+     ],
+     "b_total_quantity": [
+      289
+     ],
+     "b_status": [
+      1
+     ],
+     "b_bid_type": [
+      1
+     ],
+     "b_is_bunch": [
+      5
+     ],
+     "b_type": [
+      0
+     ],
+     "b_bid_to_ra": [
+      0
+     ],
+     "b_buyer_status": [
+      0
+     ],
+     "b_eval_type": [
+      0
+     ],
+     "final_start_date_sort": [
+      "2026-10-03T11:25:03Z"
+     ],
+     "final_end_date_sort": [
+      "2026-10-24T12:00:00Z"
+     ],
+     "bd_category_name": [
+      "Biochemistry,Pathology,DSRU,Glasswares Labwares,Misc items"
+     ],
+     "b_is_custom_item": [
+      0
+     ],
+     "bbt_title": [
+      "Chemicals and Consumables"
+     ],
+     "is_high_value": [
+      false
+     ],
+     "b_ra_to_bid": [
+      1
+     ],
+     "b_is_inactive": [
+      0
+     ],
+     "b_cat_id": [
+      "home_boq_boql_boql_boq"
+     ],
+     "b.b_created_by": [
+      "REDACTED"
+     ],
+     "ba_is_single_packet": [
+      0
+     ],
+     "ba_is_global_tendering": [
+      0
+     ],
+     "is_rc_bid": [
+      0
+     ],
+     "ba_official_details_minName": [
+      "Ministry of AYUSH"
+     ],
+     "ba_official_details_deptName": [
+      "NA"
+     ],
+     "bd_details_is_boq": [
+      true
+     ],
+     "bd_details_new_boq": [
+      true
+     ],
+     "bid_schedule": [],
+     "parent_bid_schedule": []
+    },
+    {
+     "id": "9910922",
+     "b_id": [
+      9910922
+     ],
+     "b_bid_number": [
+      "GEM/2026/B/8052275"
+     ],
+     "b_category_name": [
+      "FEELER GAUGE (PART NO: 623200708007),METALLIC TAPER GAUGE/SCALE (PART NO: 201090010217),GRIP GAUGE "
+     ],
+     "b_total_quantity": [
+      28
+     ],
+     "b_status": [
+      1
+     ],
+     "b_bid_type": [
+      1
+     ],
+     "b_is_bunch": [
+      3
+     ],
+     "b_type": [
+      0
+     ],
+     "b_bid_to_ra": [
+      0
+     ],
+     "b_buyer_status": [
+      0
+     ],
+     "b_eval_type": [
+      1
+     ],
+     "final_start_date_sort": [
+      "2026-09-18T11:36:58Z"
+     ],
+     "final_end_date_sort": [
+      "2026-10-13T20:00:00Z"
+     ],
+     "bd_category_name": [
+      "FEELER GAUGE (PART NO: 623200708007),FEELER GAUGE (PART NO: 623200708007),FEELER GAUGE (PART NO: 623200708007),METALLIC TAPER GAUGE/SCALE (PART NO: 201090010217),METALLIC TAPER GAUGE/SCALE (PART NO: 201090010217),METALLIC TAPER GAUGE/SCALE (PART NO: 201090010217),GRIP GAUGE (PART NO: 201090010215),GRIP GAUGE (PART NO: 201090010215),GRIP GAUGE (PART NO: 201090010215)"
+     ],
+     "b_is_custom_item": [
+      1
+     ],
+     "is_high_value": [
+      false
+     ],
+     "b_ra_to_bid": [
+      1
+     ],
+     "b_is_inactive": [
+      0
+     ],
+     "b_cat_id": [
+      "home_univ_univ_univ_univ"
+     ],
+     "b.b_created_by": [
+      "REDACTED"
+     ],
+     "ba_is_single_packet": [
+      0
+     ],
+     "ba_is_global_tendering": [
+      0
+     ],
+     "is_rc_bid": [
+      0
+     ],
+     "ba_official_details_minName": [
+      "Ministry of Defence"
+     ],
+     "ba_official_details_deptName": [
+      "Department of Defence Production"
+     ],
+     "bid_schedule": [],
+     "parent_bid_schedule": []
+    },
+    {
+     "id": "9982023",
+     "b_id": [
+      9982023
+     ],
+     "b_bid_number": [
+      "GEM/2026/B/8114345"
+     ],
+     "b_category_name": [
+      "Portable Fire Extinguishers (V3) ISI Marked to IS 15683"
+     ],
+     "b_total_quantity": [
+      1028
+     ],
+     "b_status": [
+      1
+     ],
+     "b_bid_type": [
+      1
+     ],
+     "b_is_bunch": [
+      1
+     ],
+     "b_type": [
+      0
+     ],
+     "b_bid_to_ra": [
+      0
+     ],
+     "b_buyer_status": [
+      0
+     ],
+     "b_eval_type": [
+      0
+     ],
+     "final_start_date_sort": [
+      "2026-10-03T19:08:23Z"
+     ],
+     "final_end_date_sort": [
+      "2026-10-13T20:00:00Z"
+     ],
+     "bd_category_name": [
+      "Portable Fire Extinguishers (V3) ISI Marked to IS 15683"
+     ],
+     "b_is_custom_item": [
+      0
+     ],
+     "is_high_value": [
+      true
+     ],
+     "b_ra_to_bid": [
+      1
+     ],
+     "b_is_inactive": [
+      0
+     ],
+     "b_cat_id": [
+      "home_lawe_fire_fire_port"
+     ],
+     "b.b_created_by": [
+      "REDACTED"
+     ],
+     "ba_is_single_packet": [
+      0
+     ],
+     "ba_is_global_tendering": [
+      0
+     ],
+     "is_rc_bid": [
+      0
+     ],
+     "ba_official_details_deptName": [
+      "ST and SC Develpment Minorities and Backward Classes Welfare Department Odisha"
+     ],
+     "bid_schedule": [],
+     "parent_bid_schedule": []
+    },
+    {
+     "id": "9938623",
+     "b_id": [
+      9938623
+     ],
+     "b_bid_number": [
+      "GEM/2026/B/8076526"
+     ],
+     "b_category_name": [
+      "XLPE Cable for Working Voltage up to and Including 1.1 KV Marked To IS 7098 (Part 1)"
+     ],
+     "b_total_quantity": [
+      3000
+     ],
+     "b_status": [
+      1
+     ],
+     "b_bid_type": [
+      1
+     ],
+     "b_is_bunch": [
+      1
+     ],
+     "b_type": [
+      0
+     ],
+     "b_bid_to_ra": [
+      0
+     ],
+     "b_buyer_status": [
+      0
+     ],
+     "b_eval_type": [
+      0
+     ],
+     "final_start_date_sort": [
+      "2026-10-01T16:15:31Z"
+     ],
+     "final_end_date_sort": [
+      "2026-10-13T20:00:00Z"
+     ],
+     "bd_category_name": [
+      "XLPE Cable for Working Voltage up to and Including 1.1 KV Marked To IS 7098 (Part 1)"
+     ],
+     "b_is_custom_item": [
+      0
+     ],
+     "is_high_value": [
+      false
+     ],
+     "b_ra_to_bid": [
+      1
+     ],
+     "b_is_inactive": [
+      0
+     ],
+     "b_cat_id": [
+      "home_powe_elec_elec_xl32325872"
+     ],
+     "b.b_created_by": [
+      "REDACTED"
+     ],
+     "ba_is_single_packet": [
+      1
+     ],
+     "ba_is_global_tendering": [
+      0
+     ],
+     "is_rc_bid": [
+      0
+     ],
+     "ba_official_details_minName": [
+      "Ministry of Railways"
+     ],
+     "ba_official_details_deptName": [
+      "Indian Railways"
+     ],
+     "bid_schedule": [],
+     "parent_bid_schedule": []
+    },
+    {
+     "id": "10030572",
+     "b_id": [
+      10030572
+     ],
+     "b_bid_number": [
+      "GEM/2026/R/752132"
+     ],
+     "b_category_name": [
+      "Provn of Living Shelter ORL 30 Men Shelter Parts,Constr mtrl for Living shelter ORL 30 Men,Provn of"
+     ],
+     "b_total_quantity": [
+      77
+     ],
+     "b_status": [
+      1
+     ],
+     "b_bid_type": [
+      2
+     ],
+     "b_is_bunch": [
+      14
+     ],
+     "b_type": [
+      0
+     ],
+     "b_bid_to_ra": [
+      1
+     ],
+     "b_buyer_status": [
+      0
+     ],
+     "b_eval_type": [
+      3
+     ],
+     "final_start_date_sort": [
+      "2026-10-14T19:00:00Z"
+     ],
+     "final_end_date_sort": [
+      "2026-10-15T19:00:00Z"
+     ],
+     "b_is_custom_item": [
+      0
+     ],
+     "b_bid_number_parent": [
+      "GEM/2026/B/8094459"
+     ],
+     "b_id_parent": [
+      9959367
+     ],
+     "is_high_value": [
+      false
+     ],
+     "b_ra_to_bid": [
+      1
+     ],
+     "ra_b_status": [
+      1
+     ],
+     "b_is_inactive": [
+      0
+     ],
+     "ra_b_buyer_status": [
+      2
+     ],
+     "b_cat_id": [
+      "home_boq_boql_boql_boq"
+     ],
+     "b.b_created_by": [
+      "REDACTED"
+     ],
+     "ba_is_single_packet": [
+      0
+     ],
+     "ba_is_global_tendering": [
+      0
+     ],
+     "is_rc_bid": [
+      0
+     ],
+     "ba_official_details_minName": [
+      "Ministry of Defence"
+     ],
+     "ba_official_details_deptName": [
+      "Department of Military Affairs"
+     ],
+     "bid_schedule": [
+      {
+       "bs_id": "6522876",
+       "bs_bid_id": "10030572",
+       "bs_title": "Schedule 1 Shelter Parts only",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "6522877",
+       "bs_bid_id": "10030572",
+       "bs_title": "Schedule 3 Furniture Parts, Fire Alarm System and Powder Type Fire Extinguisher",
+       "bs_status": "0"
+      }
+     ],
+     "parent_bid_schedule": [
+      {
+       "bs_id": "6454250",
+       "bs_bid_id": "9959367",
+       "bs_title": "Schedule 1 Shelter Parts only",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "6454251",
+       "bs_bid_id": "9959367",
+       "bs_title": "Schedule 2 Constr Mtrl Including Electric Items",
+       "bs_status": "0"
+      },
+      {
+       "bs_id": "6454252",
+       "bs_bid_id": "9959367",
+       "bs_title": "Schedule 3 Furniture Parts, Fire Alarm System and Powder Type Fire Extinguisher",
+       "bs_status": "0"
+      }
+     ]
+    },
+    {
+     "id": "9981969",
+     "b_id": [
+      9981969
+     ],
+     "b_bid_number": [
+      "GEM/2026/B/8114297"
+     ],
+     "b_category_name": [
+      "Self Ballasted LED Lamps (LED Bulb) Conforming to IS 16102 (Part 2) (V3),Self Ballasted LED Lamps ("
+     ],
+     "b_total_quantity": [
+      335
+     ],
+     "b_status": [
+      1
+     ],
+     "b_bid_type": [
+      1
+     ],
+     "b_is_bunch": [
+      3
+     ],
+     "b_type": [
+      0
+     ],
+     "b_bid_to_ra": [
+      0
+     ],
+     "b_buyer_status": [
+      0
+     ],
+     "b_eval_type": [
+      0
+     ],
+     "final_start_date_sort": [
+      "2026-10-03T19:23:08Z"
+     ],
+     "final_end_date_sort": [
+      "2026-10-13T20:00:00Z"
+     ],
+     "bd_category_name": [
+      "Self Ballasted LED Lamps (LED Bulb) Conforming to IS 16102 (Part 2) (V3),Self Ballasted LED Lamps (LED Bulb) Conforming to IS 16102 (Part 2) (V3),7 Watt White-LED Based Solar Street Lighting System As Per MNRE Specification"
+     ],
+     "b_is_custom_item": [
+      0
+     ],
+     "is_high_value": [
+      false
+     ],
+     "b_ra_to_bid": [
+      1
+     ],
+     "b_is_inactive": [
+      0
+     ],
+     "b_cat_id": [
+      "home_el05420327_lamp_lamp_se47014418,home_el63626345_lamp_lamp_whit"
+     ],
+     "b.b_created_by": [
+      "REDACTED"
+     ],
+     "ba_is_single_packet": [
+      0
+     ],
+     "ba_is_global_tendering": [
+      0
+     ],
+     "is_rc_bid": [
+      0
+     ],
+     "ba_official_details_deptName": [
+      "Department of Panchayati Raj"
+     ],
+     "bid_schedule": [],
+     "parent_bid_schedule": []
+    },
+    {
+     "id": "9750331",
+     "b_id": [
+      9750331
+     ],
+     "b_bid_number": [
+      "GEM/2026/B/7912611"
+     ],
+     "b_category_name": [
+      "AI Based Access Management Software,PC,Laptor 13TH Gen Intel Core,1 KVA 600 W UPS and PC Accessores"
+     ],
+     "b_total_quantity": [
+      15
+     ],
+     "b_status": [
+      1
+     ],
+     "b_bid_type": [
+      1
+     ],
+     "b_is_bunch": [
+      6
+     ],
+     "b_type": [
+      0
+     ],
+     "b_bid_to_ra": [
+      0
+     ],
+     "b_buyer_status": [
+      0
+     ],
+     "b_eval_type": [
+      0
+     ],
+     "final_start_date_sort": [
+      "2026-09-22T19:45:59Z"
+     ],
+     "final_end_date_sort": [
+      "2026-10-13T20:00:00Z"
+     ],
+     "bd_category_name": [
+      "AI Based Access Management Software,PC,Laptor 13TH Gen Intel Core,1 KVA 600 W UPS and PC Accessores,2 MP PTZ Camera,Installation and Commissioning"
+     ],
+     "b_is_custom_item": [
+      0
+     ],
+     "bbt_title": [
+      "Procurement and Installation of  Electronic Visitor Management System"
+     ],
+     "is_high_value": [
+      false
+     ],
+     "b_ra_to_bid": [
+      1
+     ],
+     "b_is_inactive": [
+      0
+     ],
+     "b_cat_id": [
+      "home_boq_boql_boql_boq"
+     ],
+     "b.b_created_by": [
+      "REDACTED"
+     ],
+     "ba_is_single_packet": [
+      0
+     ],
+     "ba_is_global_tendering": [
+      0
+     ],
+     "is_rc_bid": [
+      0
+     ],
+     "ba_official_details_minName": [
+      "Ministry of Defence"
+     ],
+     "ba_official_details_deptName": [
+      "Department of Military Affairs"
+     ],
+     "bd_details_is_boq": [
+      true
+     ],
+     "bd_details_new_boq": [
+      true
+     ],
+     "bid_schedule": [],
+     "parent_bid_schedule": []
+    },
+    {
+     "id": "9859222",
+     "b_id": [
+      9859222
+     ],
+     "b_bid_number": [
+      "GEM/2026/B/8007159"
+     ],
+     "b_category_name": [
+      "Cloth Disruptive Polyester and Cotton (20: 80) with Digital Print Uniform Cloth (V4) as per CRPF Sp"
+     ],
+     "b_total_quantity": [
+      12938
+     ],
+     "b_status": [
+      1
+     ],
+     "b_bid_type": [
+      1
+     ],
+     "b_is_bunch": [
+      1
+     ],
+     "b_type": [
+      0
+     ],
+     "b_bid_to_ra": [
+      0
+     ],
+     "b_buyer_status": [
+      0
+     ],
+     "b_eval_type": [
+      0
+     ],
+     "final_start_date_sort": [
+      "2026-09-22T19:14:34Z"
+     ],
+     "final_end_date_sort": [
+      "2026-10-13T20:00:00Z"
+     ],
+     "bd_category_name": [
+      "Cloth Disruptive Polyester and Cotton (20: 80) with Digital Print Uniform Cloth (V4) as per CRPF Specifications"
+     ],
+     "b_is_custom_item": [
+      0
+     ],
+     "is_high_value": [
+      false
+     ],
+     "b_ra_to_bid": [
+      1
+     ],
+     "b_is_inactive": [
+      0
+     ],
+     "b_cat_id": [
+      "home_appa_clot_unif_cl18222107"
+     ],
+     "b.b_created_by": [
+      "REDACTED"
+     ],
+     "ba_is_single_packet": [
+      0
+     ],
+     "ba_is_global_tendering": [
+      0
+     ],
+     "is_rc_bid": [
+      0
+     ],
+     "ba_official_details_minName": [
+      "Ministry of Home Affairs"
+     ],
+     "ba_official_details_deptName": [
+      "Central Armed Police Forces"
+     ],
+     "bid_schedule": [],
+     "parent_bid_schedule": []
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,29 @@
+<!-- Trimmed from https://bidplus.gem.gov.in/all-bids: just the script that loads results.
+     The CSRF token value has been replaced. -->
+<html>
+<body>
+<div id="bidCard"></div>
+<script>
+// important function - load bids
+function loadBids(page = null) {
+    var postdata = {};
+    if (page) {
+        postdata['page'] = page;
+    }
+    postdata['param'] = window.param;
+    postdata['filter'] = window.filter;
+    $.ajax({
+        type: 'POST',
+        url: 'https://bidplus.gem.gov.in/all-bids-data',
+        dataType: 'json',
+        data: {'payload': JSON.stringify(postdata), 'csrf_bd_gem_nk': '0123456789abcdef0123456789abcdef'},
+        success: function (data) {
+            if (data.code == 200) {
+                var total_numbers = data.response.response.numFound;
+            }
+        }
+    });
+}
+</script>
+</body>
+</html>
